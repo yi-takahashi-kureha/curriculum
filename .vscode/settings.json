@@ -1,0 +1,10 @@
+{
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.php$",
+        "cmd": "prettier --plugin=@prettier/plugin-php ${file} --write"
+      }
+    ]
+  }
+}

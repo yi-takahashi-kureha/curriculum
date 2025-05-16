@@ -28,7 +28,6 @@ $options = [
 ];
 // ------------------------------------
 
-
 try {
     // PDOインスタンスの作成 (データベースへの接続)
     $pdo = new PDO($dsn, $db_user, $db_pass, $options);
@@ -36,7 +35,8 @@ try {
     echo "<p>データベースへの接続に成功しました。</p>";
 
     $sql = "SELECT title, price FROM books";
-    $stmt = $pdo->query($sql); // query() は直接SQLを実行する
+    $stmt = $pdo->prepare($sql); // プリペアドステートメントを作成
+    $stmt->execute(); // プリペアドステートメントを実行
 
     echo "<h2>書籍リスト:</h2>";
     if ($stmt->rowCount() > 0) {
@@ -57,7 +57,7 @@ try {
 } finally {
     // データベース接続をnullで解放[推奨らしいため一応]
     $pdo = null;
-    echo "<p>\データベース接続を解放しました。/</p>"; // 確認用
+    echo "<p>データベース接続を解放しました。</p>"; // 確認用
 }
 ?>
 </body>

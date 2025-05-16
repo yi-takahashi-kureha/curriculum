@@ -59,7 +59,7 @@
                 if ($stmt->rowCount() > 0) {
                     echo "<p>見つかった書籍:</p>";
                     echo "<ul>";
-                    while ($row = $stmt->fetch()) {
+                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { // 修正
                         $title = htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8');
                         $author_display = "";
                         if (isset($row['author_name']) && $row['author_name'] !== null) {
@@ -73,7 +73,7 @@
                 }
 
             } catch (PDOException $e) {
-                echo "<p'>データベースエラー: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</p>";
+                echo "<p>データベースエラー: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</p>";
             } finally {
                 $pdo = null;
             }

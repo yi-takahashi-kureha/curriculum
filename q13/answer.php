@@ -16,21 +16,42 @@ $filename = "output.txt";
 $textToWrite = "Hello, this is a test message!\n";
 $textToWrite .= "これはPHPから書き込まれたテストメッセージです。\n";
 
-$fileHandle = @fopen($filename, 'w');
+// ファイルが存在するかチェック
+if (file_exists($filename)) {
+    // ファイルへの書き込み権限があるかチェック
+    if (is_writable($filename)) {
+        $fileHandle = fopen($filename, 'w');
 
-if ($fileHandle) {
-
-    if (fwrite($fileHandle, $textToWrite) !== false) {
-        echo "<p>" . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " に文字列を書き込みました。</p>";
-        echo "<p>書き込んだ内容:</p>";
-        echo "<pre>" . htmlspecialchars($textToWrite, ENT_QUOTES, 'UTF-8') . "</pre>";
+        if ($fileHandle !== false) {
+            if (fwrite($fileHandle, $textToWrite) !== false) {
+                echo "<p>" . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " に文字列を書き込みました。</p>";
+                echo "<p>書き込んだ内容:</p>";
+                echo "<pre>" . htmlspecialchars($textToWrite, ENT_QUOTES, 'UTF-8') . "</pre>";
+            } else {
+                echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " への書き込みに失敗しました。</p>";
+            }
+            fclose($fileHandle);
+        } else {
+            echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " を開けませんでした。</p>";
+        }
     } else {
-        echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " への書き込みに失敗しました。</p>";
+        echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " に書き込み権限がありません。</p>";
     }
-    fclose($fileHandle);
-
 } else {
-    echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " を開けませんでした。書き込み権限を確認してください。</p>";
+    // ファイルが存在しない場合は新規作成を試みる
+    $fileHandle = fopen($filename, 'w');
+    if ($fileHandle !== false) {
+        if (fwrite($fileHandle, $textToWrite) !== false) {
+            echo "<p>" . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " に文字列を書き込みました。</p>";
+            echo "<p>書き込んだ内容:</p>";
+            echo "<pre>" . htmlspecialchars($textToWrite, ENT_QUOTES, 'UTF-8') . "</pre>";
+        } else {
+            echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " への書き込みに失敗しました。</p>";
+        }
+        fclose($fileHandle);
+    } else {
+        echo "<p style='color:red;'>エラー: " . htmlspecialchars($filename, ENT_QUOTES, 'UTF-8') . " を作成できませんでした。ディレクトリの書き込み権限を確認してください。</p>";
+    }
 }
 ?>
 </body>
